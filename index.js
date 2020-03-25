@@ -92,16 +92,12 @@ app.get('/', function (req, res) {
         firstName: response.data.conversion.user_access.user.first_name,
         lastName: response.data.conversion.user_access.user.last_name
       })
+      res.status(200).end('OK 200')
     })
     .catch(function (error) {
       // handle error
       console.log(error)
     })
-    .then(function () {
-      res.end('OK 200')
-    })
-
-  res.end('OK 200')
 })
 
 app.listen(PORT, function () {
