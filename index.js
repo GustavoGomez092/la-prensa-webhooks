@@ -65,6 +65,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get('/conversions', function (req, res) {
+  res.status(200)
   console.log('Incoming lead')
   const responseOpject = JSON.parse(decrypt(keystring, req.query.data))
   // Make a request for a user with a given ID
@@ -99,6 +100,7 @@ app.get('/conversions', function (req, res) {
 })
 
 app.post('/conversions', function (req, res) {
+  res.status(200)
   console.log('Incoming lead')
   const responseOpject = JSON.parse(decrypt(keystring, req.query.data))
   // Make a request for a user with a given ID
