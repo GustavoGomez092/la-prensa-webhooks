@@ -97,6 +97,7 @@ app.get('/', function (req, res) {
     .catch(function (error) {
       // handle error
       console.log(error)
+      res.status(500).end('Server error')
     })
 })
 
