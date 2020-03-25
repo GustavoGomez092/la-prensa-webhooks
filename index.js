@@ -1,3 +1,5 @@
+const { Analytics } = require('analytics')
+const googleAnalytics = require('@analytics/google-analytics').default
 const express = require('express')
 const bodyParser = require('body-parser')
 const axios = require('axios').default
@@ -8,6 +10,17 @@ const crypto = require('crypto')
 const PORT = process.env.PORT || 3000
 
 const { API_TOKEN, PRIVATE_KEY } = process.env
+
+// Set up Google Analytics
+const analytics = Analytics({
+  app: 'La Prensa Sandbox',
+  version: 100,
+  plugins: [
+    googleAnalytics({
+      trackingId: 'UA-161812465-1'
+    })
+  ]
+})
 
 // Data decoder
 const keystring = PRIVATE_KEY
@@ -53,8 +66,6 @@ app.use(bodyParser.json())
 
 app.get('/', function (req, res) {
   const responseOpject = JSON.parse(decrypt(keystring, req.query.data))
-  console.log(responseOpject)
-
   // Make a request for a user with a given ID
   axios.get('https://sandbox.tinypass.com/api/v3/publisher/conversion/get', {
     params: {
@@ -65,7 +76,22 @@ app.get('/', function (req, res) {
   })
     .then(function (response) {
       // handle success
-      console.log(response.data)
+      // console.log(response.data)
+      console.log({
+        action: responseOpject.event,
+        category: response.data.conversion.term.name,
+        value: response.data.conversion.user_payment.amount,
+        label: 'Top Floor Marketing Campaign'
+      })
+      analytics.track(responseOpject.event, {
+        category: response.data.conversion.term.name,
+        value: response.data.conversion.user_payment.amount,
+        label: 'Top Floor Marketing Campaign'
+      })
+      analytics.identify(response.data.conversion.user_access.user.email, {
+        firstName: response.data.conversion.user_access.user.first_name,
+        lastName: response.data.conversion.user_access.user.last_name
+      })
     })
     .catch(function (error) {
       // handle error
