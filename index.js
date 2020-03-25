@@ -9,7 +9,7 @@ const crypto = require('crypto')
 
 const PORT = process.env.PORT || 3000
 
-const { API_TOKEN, PRIVATE_KEY } = process.env
+const { API_TOKEN, PRIVATE_KEY, GOOGLE_ANALYTICS_ID, CAMPAIGN_NAME, ENV } = process.env
 
 // Set up Google Analytics
 const analytics = Analytics({
@@ -17,7 +17,7 @@ const analytics = Analytics({
   version: 100,
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-161812465-1'
+      trackingId: GOOGLE_ANALYTICS_ID
     })
   ]
 })
@@ -69,7 +69,7 @@ app.get('/conversions', function (req, res) {
   console.log('Incoming lead')
   const responseOpject = JSON.parse(decrypt(keystring, req.query.data))
   // Make a request for a user with a given ID
-  axios.get('https://sandbox.tinypass.com/api/v3/publisher/conversion/get', {
+  axios.get(`${ENV === 'development' ? 'https://sandbox.tinypass.com/api/v3' : 'https://api.tinypass.com/api/v3'}/publisher/conversion/get`, {
     params: {
       api_token: API_TOKEN,
       aid: responseOpject.aid,
@@ -82,7 +82,7 @@ app.get('/conversions', function (req, res) {
       analytics.track(responseOpject.event, {
         category: response.data.conversion.term.name,
         value: response.data.conversion.user_payment.amount,
-        label: 'Top Floor Marketing Campaign'
+        label: CAMPAIGN_NAME
       })
       analytics.identify(response.data.conversion.user_access.user.email, {
         firstName: response.data.conversion.user_access.user.first_name,
@@ -104,7 +104,7 @@ app.post('/conversions', function (req, res) {
   console.log('Incoming lead')
   const responseOpject = JSON.parse(decrypt(keystring, req.query.data))
   // Make a request for a user with a given ID
-  axios.get('https://sandbox.tinypass.com/api/v3/publisher/conversion/get', {
+  axios.get(`${ENV === 'development' ? 'https://sandbox.tinypass.com/api/v3' : 'https://api.tinypass.com/api/v3'}/publisher/conversion/get`, {
     params: {
       api_token: API_TOKEN,
       aid: responseOpject.aid,
@@ -117,7 +117,7 @@ app.post('/conversions', function (req, res) {
       analytics.track(responseOpject.event, {
         category: response.data.conversion.term.name,
         value: response.data.conversion.user_payment.amount,
-        label: 'Top Floor Marketing Campaign'
+        label: CAMPAIGN_NAME
       })
       analytics.identify(response.data.conversion.user_access.user.email, {
         firstName: response.data.conversion.user_access.user.first_name,

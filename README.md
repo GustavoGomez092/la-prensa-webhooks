@@ -1,1 +1,9 @@
-La Prensa WebKooks API test
+La Prensa WebKooks API
+
+ENV Fields
+
+API_TOKEN
+PRIVATE_KEY
+GOOGLE_ANALYTICS_ID
+CAMPAIGN_NAME
+ENV
