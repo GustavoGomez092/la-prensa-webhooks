@@ -65,6 +65,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get('/', function (req, res) {
+  console.log('Incoming lead')
   const responseOpject = JSON.parse(decrypt(keystring, req.query.data))
   // Make a request for a user with a given ID
   axios.get('https://sandbox.tinypass.com/api/v3/publisher/conversion/get', {
@@ -93,7 +94,7 @@ app.get('/', function (req, res) {
       res.sendStatus(500)
       res.status(500).end('server error')
     })
-  res.statusMessage = '200 OK'
+  res.statusMessage = 'OK'
   res.status(200).end()
 })
 
