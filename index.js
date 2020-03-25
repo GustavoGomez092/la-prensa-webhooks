@@ -64,7 +64,7 @@ function decrypt (keyString, data) {
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/', function (req, res) {
+app.get('/conversions', function (req, res) {
   console.log('Incoming lead')
   const responseOpject = JSON.parse(decrypt(keystring, req.query.data))
   // Make a request for a user with a given ID
@@ -94,7 +94,41 @@ app.get('/', function (req, res) {
       res.sendStatus(500)
       res.status(500).end('server error')
     })
-  res.statusMessage = 'OK'
+  res.statusMessage = '200 OK'
+  res.status(200).end()
+})
+
+app.post('/conversions', function (req, res) {
+  console.log('Incoming lead')
+  const responseOpject = JSON.parse(decrypt(keystring, req.query.data))
+  // Make a request for a user with a given ID
+  axios.get('https://sandbox.tinypass.com/api/v3/publisher/conversion/get', {
+    params: {
+      api_token: API_TOKEN,
+      aid: responseOpject.aid,
+      access_id: responseOpject.access_id
+    }
+  })
+    .then(function (response) {
+      // handle success
+      // console.log(response.data)
+      analytics.track(responseOpject.event, {
+        category: response.data.conversion.term.name,
+        value: response.data.conversion.user_payment.amount,
+        label: 'Top Floor Marketing Campaign'
+      })
+      analytics.identify(response.data.conversion.user_access.user.email, {
+        firstName: response.data.conversion.user_access.user.first_name,
+        lastName: response.data.conversion.user_access.user.last_name
+      })
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error)
+      res.sendStatus(500)
+      res.status(500).end('server error')
+    })
+  res.statusMessage = '200 OK'
   res.status(200).end()
 })
 
