@@ -77,12 +77,6 @@ app.get('/', function (req, res) {
     .then(function (response) {
       // handle success
       // console.log(response.data)
-      console.log({
-        action: responseOpject.event,
-        category: response.data.conversion.term.name,
-        value: response.data.conversion.user_payment.amount,
-        label: 'Top Floor Marketing Campaign'
-      })
       analytics.track(responseOpject.event, {
         category: response.data.conversion.term.name,
         value: response.data.conversion.user_payment.amount,
@@ -92,15 +86,17 @@ app.get('/', function (req, res) {
         firstName: response.data.conversion.user_access.user.first_name,
         lastName: response.data.conversion.user_access.user.last_name
       })
-      res.status(200).end('OK 200')
     })
     .catch(function (error) {
       // handle error
       console.log(error)
-      res.status(500).end('Server error')
+      res.sendStatus(500)
+      res.status(500).end()
     })
+  res.sendStatus(200)
+  res.status(200).end()
 })
 
 app.listen(PORT, function () {
-  console.log('Example app listening on port 3000!')
+  console.log(`app listening on port ${PORT}!`)
 })
