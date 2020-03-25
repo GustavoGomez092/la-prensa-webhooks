@@ -91,10 +91,9 @@ app.get('/', function (req, res) {
       // handle error
       console.log(error)
       res.sendStatus(500)
-      res.status(500).end()
+      res.status(500).end('server error')
     })
-  res.sendStatus(200)
-  res.status(200).end()
+  res.status(200).end('200 OK')
 })
 
 app.listen(PORT, function () {
