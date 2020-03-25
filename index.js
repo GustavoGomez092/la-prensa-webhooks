@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.post('/', function (req, res) {
+app.get('/', function (req, res) {
   console.log(req.body)
   res.end('OK 200')
 })
