@@ -1,13 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const axios = require('axios').default
-const env = require('dotenv').config().parsed
+require('dotenv').config()
 const app = express()
 const crypto = require('crypto')
 
 const PORT = process.env.PORT || 3000
 
-const { API_TOKEN, PRIVATE_KEY } = env
+const { API_TOKEN, PRIVATE_KEY } = process.env
 
 // Data decoder
 const keystring = PRIVATE_KEY
