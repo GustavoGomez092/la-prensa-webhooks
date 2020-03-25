@@ -93,7 +93,8 @@ app.get('/', function (req, res) {
       res.sendStatus(500)
       res.status(500).end('server error')
     })
-  res.status(200).end('200 OK')
+  res.statusMessage = '200 OK'
+  res.status(200).end()
 })
 
 app.listen(PORT, function () {
